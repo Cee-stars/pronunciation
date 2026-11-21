@@ -1,5 +1,43 @@
 import type { Phoneme } from '../types';
+import { phonemeById, ruleById, topicById } from '../data';
 import { Say, SayAll, SayPair } from './Say';
+
+/**
+ * 関連項目のリンク。id が音素・ルール・解説のどれを指すかはデータ側で決まらないので、
+ * 三つの索引を順に引いて種別と見出しを解決する。未執筆の id は素のまま残し、
+ * 遷移先で「準備中」と表示させる。
+ */
+function RelatedChip({ id }: { id: string }) {
+  const ph = phonemeById.get(id);
+  if (ph) {
+    return (
+      <a className="chip" href={`#/phoneme/${id}`}>
+        /{ph.ipa}/ {ph.nickname}
+      </a>
+    );
+  }
+  const rule = ruleById.get(id);
+  if (rule) {
+    return (
+      <a className="chip" href={`#/rule/${id}`}>
+        {rule.title}
+      </a>
+    );
+  }
+  const topic = topicById.get(id);
+  if (topic) {
+    return (
+      <a className="chip" href={`#/topic/${id}`}>
+        {topic.title}
+      </a>
+    );
+  }
+  return (
+    <a className="chip chip-pending" href={`#/rule/${id}`}>
+      {id}（準備中）
+    </a>
+  );
+}
 
 function Section({
   title,
@@ -255,12 +293,10 @@ export function PhonemeView({ ph }: { ph: Phoneme }) {
       )}
 
       {ph.relatedRules && ph.relatedRules.length > 0 && (
-        <Section title="関連する音声変化">
+        <Section title="関連項目">
           <div className="chips">
             {ph.relatedRules.map((id) => (
-              <a key={id} className="chip" href={`#/rule/${id}`}>
-                {id}
-              </a>
+              <RelatedChip key={id} id={id} />
             ))}
           </div>
         </Section>

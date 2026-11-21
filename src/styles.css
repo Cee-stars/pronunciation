@@ -673,3 +673,8 @@ caption {
     display: none;
   }
 }
+
+.chip-pending {
+  color: var(--ink-faint);
+  border-style: dashed;
+}
