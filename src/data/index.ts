@@ -6,7 +6,12 @@ import { dress } from './phonemes/dress';
 import { strut } from './phonemes/strut';
 import { foot } from './phonemes/foot';
 import { schwa } from './phonemes/schwa';
+import { fleece } from './phonemes/fleece';
+import { goose } from './phonemes/goose';
+import { nurse } from './phonemes/nurse';
+import { letter } from './phonemes/letter';
 import { allTopics } from './topics';
+import { allRules } from './rules';
 
 /**
  * 音素の登録。音韻的な順序（母音は舌の位置順、子音は調音点順）で並べる。
@@ -20,9 +25,15 @@ export const phonemes: Phoneme[] = [
   strut,
   foot,
   schwa,
+  // 長母音
+  fleece,
+  goose,
+  // R性母音
+  nurse,
+  letter,
 ];
 
-export const rules: Rule[] = [];
+export const rules: Rule[] = allRules;
 
 export const topics: Topic[] = allTopics;
 
