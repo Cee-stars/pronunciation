@@ -8,6 +8,8 @@ import { foot } from './phonemes/foot';
 import { schwa } from './phonemes/schwa';
 import { fleece } from './phonemes/fleece';
 import { goose } from './phonemes/goose';
+import { lot } from './phonemes/lot';
+import { thought } from './phonemes/thought';
 import { nurse } from './phonemes/nurse';
 import { letter } from './phonemes/letter';
 import { allTopics } from './topics';
@@ -28,6 +30,8 @@ export const phonemes: Phoneme[] = [
   // 長母音
   fleece,
   goose,
+  lot,
+  thought,
   // R性母音
   nurse,
   letter,
