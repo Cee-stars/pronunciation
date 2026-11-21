@@ -13,6 +13,11 @@ import { aspiration } from './aspiration';
 import { palatalization } from './palatalization';
 import { darkL } from './dark-l';
 import { nasalLateralRelease } from './nasal-lateral-release';
+import { linking } from './linking';
+import { elision } from './elision';
+import { clusterSimplification } from './cluster-simplification';
+import { assimilation } from './assimilation';
+import { wordStressRules } from './word-stress-rules';
 
 /** 音声変化ルール。音素エントリの relatedRules から参照される。 */
 export const allRules: Rule[] = [
@@ -30,4 +35,11 @@ export const allRules: Rule[] = [
   palatalization,
   darkL,
   nasalLateralRelease,
+  // Day 21-23: 連結発話
+  linking,
+  elision,
+  clusterSimplification,
+  assimilation,
+  // Day 24-27: 強勢・リズム
+  wordStressRules,
 ];
