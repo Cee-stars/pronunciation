@@ -34,6 +34,17 @@ import { th } from './phonemes/th';
 import { dh } from './phonemes/dh';
 import { s as sCons } from './phonemes/s';
 import { sh } from './phonemes/sh';
+import { z } from './phonemes/z';
+import { zh } from './phonemes/zh';
+import { h } from './phonemes/h';
+import { ch } from './phonemes/ch';
+import { jh } from './phonemes/jh';
+import { m } from './phonemes/m';
+import { n } from './phonemes/n';
+import { l } from './phonemes/l';
+import { r } from './phonemes/r';
+import { w } from './phonemes/w';
+import { y } from './phonemes/y';
 import { allTopics } from './topics';
 import { allRules } from './rules';
 
@@ -81,7 +92,21 @@ export const phonemes: Phoneme[] = [
   th,
   dh,
   sCons,
+  z,
   sh,
+  zh,
+  h,
+  // 破擦音
+  ch,
+  jh,
+  // 鼻音
+  m,
+  n,
+  // 接近音
+  l,
+  r,
+  w,
+  y,
 ];
 
 export const rules: Rule[] = allRules;

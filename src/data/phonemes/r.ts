@@ -114,6 +114,7 @@ export const r: Phoneme = {
   ],
   examples: [
     { word: 'red', ipa: 'rɛd', position: '語頭', note: '直後の母音が暗く丸く染まる。led と比べると分かる' },
+    { word: 'right', ipa: 'raɪt', position: '語頭', note: 'light /laɪt/ と対比。write と同音' },
     { word: 'write', ipa: 'raɪt', position: '語頭', note: '綴り wr。w は読まない' },
     { word: 'grass', ipa: 'ɡræs', position: '語中', note: '子音連結。glass と混同する最難位置' },
     { word: 'correct', ipa: 'kəˈrɛkt', position: '語中', note: 'collect と同音になりやすい。語中が本当の難所' },
