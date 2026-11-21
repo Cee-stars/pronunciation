@@ -1,11 +1,6 @@
 import type { Phoneme } from '../../types';
 
-/**
- * 短母音（弛緩母音 lax vowels）6つ。
- * 日本語の5母音に潰されやすい音の集まりで、L1干渉がもっとも激しい領域。
- */
-export const shortVowels: Phoneme[] = [
-  {
+export const trap: Phoneme = {
     id: 'trap',
     ipa: 'æ',
     type: 'vowel',
@@ -137,5 +132,4 @@ export const shortVowels: Phoneme[] = [
       '米英語では /æ/ は鼻音の前で [eə] に近く上昇する話者が多い（æ-tensing）。地域差が大きい。',
       'BATH set（ask, bath, dance, half, can\'t 等）は米 /æ/ / 英 /ɑː/ で分かれる。語彙リストとして覚える領域。',
     ],
-  },
-];
+  };

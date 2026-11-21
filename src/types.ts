@@ -139,3 +139,92 @@ export interface Phoneme {
   /** 補足。方言差や表記の揺れなど。 */
   notes?: string[];
 }
+
+/* ───────────────────────── 音声変化ルール ───────────────────────── */
+
+export interface RuleExample {
+  /** 綴り。語でも句でも文でもよい。 */
+  text: string;
+  /** 実際の音。変化が起きた後の形。 */
+  ipa: string;
+  /** 変化前の形（素のまま並べた場合）。対比用。 */
+  naive?: string;
+  note?: string;
+}
+
+/** リンキング、flap T、同化などの現象。 */
+export interface Rule {
+  id: string;
+  title: string;
+  titleEn?: string;
+  genre: string;
+  oneLiner: string;
+  /** 適用条件。箇条書きで、満たすべき条件を順に。 */
+  condition: string[];
+  /** 条件が満たされたとき何が起きるか。 */
+  result: string;
+  /** なぜそうなるのか。調音の経済性などの理由。 */
+  why: string;
+  examples: RuleExample[];
+  listenFor: string[];
+  exceptions?: string[];
+  lecture: string[];
+  faq?: Faq[];
+  /** 関連する音素 id / ルール id */
+  related?: string[];
+  notes?: string[];
+}
+
+/* ───────────────────────── 解説トピック ───────────────────────── */
+
+export interface TopicTable {
+  caption?: string;
+  headers: string[];
+  rows: string[][];
+}
+
+export interface TopicSection {
+  heading: string;
+  /** 段落。1要素=1段落。 */
+  body?: string[];
+  /** 箇条書き。 */
+  list?: string[];
+  table?: TopicTable;
+  /** 音声付きで示したい例。 */
+  examples?: RuleExample[];
+}
+
+/** 調音の基礎、用語集、英米差など、音素でもルールでもない解説項目。 */
+export interface Topic {
+  id: string;
+  title: string;
+  titleEn?: string;
+  genre: string;
+  oneLiner: string;
+  sections: TopicSection[];
+  lecture?: string[];
+  faq?: Faq[];
+  related?: string[];
+  notes?: string[];
+}
+
+/* ───────────────────────── 検索 ───────────────────────── */
+
+export type RecordKind = 'phoneme' | 'rule' | 'topic' | 'word' | 'pair';
+
+/** 統合検索の1件。全ジャンルのデータをこの形に平坦化して引く。 */
+export interface SearchRecord {
+  kind: RecordKind;
+  /** 遷移先のエントリ id */
+  id: string;
+  /** 遷移先のハッシュ。語レコードは所属エントリ（音素またはルール）を指す。 */
+  href: string;
+  /** 表示タイトル */
+  title: string;
+  /** タイトル下の補助表示 */
+  subtitle: string;
+  /** 一致判定に使う語の集合（IPA・英語名・日本語名・例語・別名） */
+  keys: string[];
+  /** 検索結果に出す短い説明 */
+  snippet?: string;
+}
