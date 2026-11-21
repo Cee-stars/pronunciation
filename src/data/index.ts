@@ -41,6 +41,7 @@ import { ch } from './phonemes/ch';
 import { jh } from './phonemes/jh';
 import { m } from './phonemes/m';
 import { n } from './phonemes/n';
+import { ng } from './phonemes/ng';
 import { l } from './phonemes/l';
 import { r } from './phonemes/r';
 import { w } from './phonemes/w';
@@ -102,6 +103,7 @@ export const phonemes: Phoneme[] = [
   // 鼻音
   m,
   n,
+  ng,
   // 接近音
   l,
   r,

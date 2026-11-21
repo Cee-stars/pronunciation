@@ -12,6 +12,7 @@ import { tAllophones } from './t-allophones';
 import { aspiration } from './aspiration';
 import { palatalization } from './palatalization';
 import { darkL } from './dark-l';
+import { nasalLateralRelease } from './nasal-lateral-release';
 
 /** 音声変化ルール。音素エントリの relatedRules から参照される。 */
 export const allRules: Rule[] = [
@@ -28,4 +29,5 @@ export const allRules: Rule[] = [
   aspiration,
   palatalization,
   darkL,
+  nasalLateralRelease,
 ];
