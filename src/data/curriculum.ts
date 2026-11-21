@@ -155,7 +155,7 @@ export const curriculum: DayPlan[] = [
       '日本語の「アイ」「アウ」との違い（2拍か1拍か）を説明できる',
     ],
     earGoals: ['met / mate, let / late, boat / bought を判別できる'],
-    entries: [p('face'), p('price'), p('choice'), p('mouth'), p('goat')],
+    entries: [p('face'), p('price'), p('choice'), p('mouth'), p('goat'), r('canadian-raising')],
     review: [p('dress'), p('thought')],
   },
   {

@@ -175,7 +175,7 @@ export const price: Phoneme = {
         '到達したことが分かる程度で十分で、独立した母音として聞こえるほど長く出す必要はない。むしろ日本語話者の典型的な過剰は終点側にある。終点を強く長く出すと二拍化し、同時に強勢が後ろにずれて聞こえる。前半に重みを置き、終点は通過点として扱う。',
     },
   ],
-  relatedRules: ['canadian-raising', 'vowel-length-before-voiced', 'syllable-timing', 'linking'],
+  relatedRules: ['canadian-raising', 'vowel-length-before-voiced', 'rhythm', 'linking'],
   notes: [
     '出発点の位置には地域差がある。米南部では終点への移動がほとんど消え [aː] に近い単母音化が起きる（time が「ターム」寄り）。',
     'イギリス英語（RP）でも記号は /aɪ/ で同じだが、出発点がやや後ろ寄りになる話者がいる。音素としての区別は米英で一致している。',

@@ -152,7 +152,7 @@ export const mouth: Phoneme = {
         '一般米語ではほぼ同一の出発点をとり、音声学的には同じ低・中舌・非円唇の位置から始まる。違いは移動の向きだけである。ただし方言差があり、話者によっては /aʊ/ の出発点が /aɪ/ より前寄り、あるいは後ろ寄りになる。教えるうえでは「同じ地点から反対方向へ滑る一対」と扱うのが最も分かりやすい。',
     },
   ],
-  relatedRules: ['canadian-raising', 'vowel-length-before-voiced', 'syllable-timing', 'linking'],
+  relatedRules: ['canadian-raising', 'vowel-length-before-voiced', 'rhythm', 'linking'],
   notes: [
     '米国内の地域差が大きい。米南部や一部の都市方言では出発点が前寄りになり [æʊ] に近づく（house が「ハェウス」寄り）。',
     'イギリス英語（RP）でも記号は /aʊ/ で同じ。音素としての区別は米英で一致している。',

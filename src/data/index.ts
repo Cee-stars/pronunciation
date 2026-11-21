@@ -10,6 +10,11 @@ import { fleece } from './phonemes/fleece';
 import { goose } from './phonemes/goose';
 import { lot } from './phonemes/lot';
 import { thought } from './phonemes/thought';
+import { face } from './phonemes/face';
+import { price } from './phonemes/price';
+import { choice } from './phonemes/choice';
+import { mouth } from './phonemes/mouth';
+import { goat } from './phonemes/goat';
 import { nurse } from './phonemes/nurse';
 import { letter } from './phonemes/letter';
 import { allTopics } from './topics';
@@ -32,6 +37,12 @@ export const phonemes: Phoneme[] = [
   goose,
   lot,
   thought,
+  // 二重母音
+  face,
+  price,
+  choice,
+  mouth,
+  goat,
   // R性母音
   nurse,
   letter,
