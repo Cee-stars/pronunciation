@@ -18,6 +18,11 @@ import { elision } from './elision';
 import { clusterSimplification } from './cluster-simplification';
 import { assimilation } from './assimilation';
 import { wordStressRules } from './word-stress-rules';
+import { weakForms } from './weak-forms';
+import { fallingRising } from './falling-rising';
+import { questionIntonation } from './question-intonation';
+import { tagQuestions } from './tag-questions';
+import { focusInformation } from './focus-information';
 
 /** 音声変化ルール。音素エントリの relatedRules から参照される。 */
 export const allRules: Rule[] = [
@@ -42,4 +47,10 @@ export const allRules: Rule[] = [
   assimilation,
   // Day 24-27: 強勢・リズム
   wordStressRules,
+  weakForms,
+  // Day 28: イントネーション
+  fallingRising,
+  questionIntonation,
+  tagQuestions,
+  focusInformation,
 ];
