@@ -17,6 +17,12 @@ import { mouth } from './phonemes/mouth';
 import { goat } from './phonemes/goat';
 import { nurse } from './phonemes/nurse';
 import { letter } from './phonemes/letter';
+import { p as pCons } from './phonemes/p';
+import { b } from './phonemes/b';
+import { t } from './phonemes/t';
+import { d } from './phonemes/d';
+import { k } from './phonemes/k';
+import { g } from './phonemes/g';
 import { allTopics } from './topics';
 import { allRules } from './rules';
 
@@ -46,6 +52,13 @@ export const phonemes: Phoneme[] = [
   // R性母音
   nurse,
   letter,
+  // 破裂音（調音点順: 両唇 → 歯茎 → 軟口蓋）
+  pCons,
+  b,
+  t,
+  d,
+  k,
+  g,
 ];
 
 export const rules: Rule[] = allRules;

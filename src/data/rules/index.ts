@@ -9,6 +9,7 @@ import { canadianRaising } from './canadian-raising';
 import { flapT } from './flap-t';
 import { glottalStop } from './glottal-stop';
 import { tAllophones } from './t-allophones';
+import { aspiration } from './aspiration';
 
 /** 音声変化ルール。音素エントリの relatedRules から参照される。 */
 export const allRules: Rule[] = [
@@ -22,4 +23,5 @@ export const allRules: Rule[] = [
   tAllophones,
   flapT,
   glottalStop,
+  aspiration,
 ];
