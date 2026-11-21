@@ -6,6 +6,7 @@ import { dress } from './phonemes/dress';
 import { strut } from './phonemes/strut';
 import { foot } from './phonemes/foot';
 import { schwa } from './phonemes/schwa';
+import { allTopics } from './topics';
 
 /**
  * 音素の登録。音韻的な順序（母音は舌の位置順、子音は調音点順）で並べる。
@@ -23,7 +24,7 @@ export const phonemes: Phoneme[] = [
 
 export const rules: Rule[] = [];
 
-export const topics: Topic[] = [];
+export const topics: Topic[] = allTopics;
 
 export const phonemeById = new Map(phonemes.map((x) => [x.id, x]));
 export const ruleById = new Map(rules.map((x) => [x.id, x]));
