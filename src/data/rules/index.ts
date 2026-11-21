@@ -18,6 +18,12 @@ import { elision } from './elision';
 import { clusterSimplification } from './cluster-simplification';
 import { assimilation } from './assimilation';
 import { wordStressRules } from './word-stress-rules';
+import { suffixStressShift } from './suffix-stress-shift';
+import { nounVerbStress } from './noun-verb-stress';
+import { compoundStress } from './compound-stress';
+import { sentenceStress } from './sentence-stress';
+import { rhythm } from './rhythm';
+import { stressContentFunction } from './stress-content-function';
 import { weakForms } from './weak-forms';
 import { fallingRising } from './falling-rising';
 import { questionIntonation } from './question-intonation';
@@ -47,6 +53,12 @@ export const allRules: Rule[] = [
   assimilation,
   // Day 24-27: 強勢・リズム
   wordStressRules,
+  suffixStressShift,
+  nounVerbStress,
+  compoundStress,
+  sentenceStress,
+  rhythm,
+  stressContentFunction,
   weakForms,
   // Day 28: イントネーション
   fallingRising,
