@@ -80,6 +80,23 @@ export function buildIndex(): SearchRecord[] {
     const words = ph.examples.map((e) => e.word);
     const spellingWords = ph.spellings.flatMap((s) => s.examples);
     const pairWords = ph.contrasts.flatMap((c) => c.pairs.flatMap((p) => [p.a, p.b]));
+    const prose = [
+      ph.oneLiner,
+      ph.articulation.tongue,
+      ph.articulation.lips,
+      ...ph.howTo,
+      ...ph.listenFor,
+      ph.l1.substitute,
+      ph.l1.why,
+      ph.l1.symptom,
+      ...(ph.l1.examples ?? []),
+      ...ph.contrasts.flatMap((c) => [c.difference, c.listenFor, c.whyHard ?? '']),
+      ...ph.spellings.map((x) => x.note ?? ''),
+      ...ph.examples.map((e) => e.note ?? ''),
+      ...ph.lecture,
+      ...(ph.faq ?? []).flatMap((f) => [f.q, f.a]),
+      ...(ph.notes ?? []),
+    ].join(' ');
     out.push({
       kind: 'phoneme',
       id: ph.id,
@@ -96,10 +113,12 @@ export function buildIndex(): SearchRecord[] {
         ...(asciiAliases[ph.id] ?? []),
         ...(jaAliases[ph.id] ?? []),
         ...words,
-        ...spellingWords,
-        ...pairWords,
         ...ph.spellings.map((s) => s.pattern),
       ].filter(Boolean),
+      // 綴りパターンの例語と対比相手の語は副次扱い。
+      // 代表例語として持つエントリが、例示や対比で触れるだけのエントリより上に来る。
+      secondaryKeys: [...spellingWords, ...pairWords],
+      text: prose,
     });
 
     // 例語を単独のレコードとしても登録する。"water" で引いたときに語として出す。
@@ -147,6 +166,18 @@ export function buildIndex(): SearchRecord[] {
         ...rule.examples.map((e) => e.text),
         ...rule.examples.map((e) => e.ipa),
       ].filter(Boolean),
+      text: [
+        rule.oneLiner,
+        ...rule.condition,
+        rule.result,
+        rule.why,
+        ...rule.listenFor,
+        ...(rule.exceptions ?? []),
+        ...rule.lecture,
+        ...(rule.faq ?? []).flatMap((f) => [f.q, f.a]),
+        ...(rule.notes ?? []),
+        ...rule.examples.map((e) => e.note ?? ''),
+      ].join(' '),
     });
     for (const e of rule.examples) {
       out.push({
@@ -177,6 +208,16 @@ export function buildIndex(): SearchRecord[] {
         ...tp.sections.map((s) => s.heading),
         ...tp.sections.flatMap((s) => s.list ?? []),
       ].filter(Boolean),
+      text: [
+        tp.oneLiner,
+        ...tp.sections.flatMap((s) => s.body ?? []),
+        ...tp.sections.flatMap((s) => s.list ?? []),
+        ...tp.sections.flatMap((s) => s.table?.rows.flat() ?? []),
+        ...tp.sections.flatMap((s) => (s.examples ?? []).map((e) => `${e.text} ${e.note ?? ''}`)),
+        ...(tp.lecture ?? []),
+        ...(tp.faq ?? []).flatMap((f) => [f.q, f.a]),
+        ...(tp.notes ?? []),
+      ].join(' '),
     });
   }
 
@@ -188,19 +229,33 @@ export interface SearchHit extends SearchRecord {
   score: number;
 }
 
-/** 一致スコア。完全一致 > 先頭一致 > 部分一致。種別でも重みを付ける。 */
-function scoreOf(record: SearchRecord, q: string): number {
+/**
+ * 一致スコア。
+ *   主キー（見出し・IPA・別名・代表例語）          完全100 / 先頭70 / 部分40
+ *   副次キー（綴りの例語・対比相手の語）            完全55  / 先頭35 / 部分20
+ *   本文（解説・台本・FAQ）                       部分12
+ * 自分の例語として持つエントリが、対比相手として言及するだけのエントリより上に来る。
+ */
+function matchIn(keys: string[] | undefined, q: string, scores: [number, number, number]): number {
   let best = 0;
-  for (const key of record.keys) {
+  for (const key of keys ?? []) {
     const k = normalize(key);
     if (!k) continue;
-    if (k === q) best = Math.max(best, 100);
-    else if (k.startsWith(q)) best = Math.max(best, 70);
-    else if (k.includes(q)) best = Math.max(best, 40);
+    if (k === q) best = Math.max(best, scores[0]);
+    else if (k.startsWith(q)) best = Math.max(best, scores[1]);
+    else if (k.includes(q)) best = Math.max(best, scores[2]);
   }
+  return best;
+}
+
+function scoreOf(record: SearchRecord, q: string): number {
+  let best = Math.max(
+    matchIn(record.keys, q, [100, 70, 40]),
+    matchIn(record.secondaryKeys, q, [55, 35, 20]),
+  );
   if (best === 0) {
-    const t = normalize(record.title + record.subtitle + (record.snippet ?? ''));
-    if (t.includes(q)) best = 15;
+    const t = normalize(record.title + record.subtitle + (record.snippet ?? '') + (record.text ?? ''));
+    if (t.includes(q)) best = 12;
   }
   if (best === 0) return 0;
   const kindWeight: Record<SearchRecord['kind'], number> = {
@@ -210,7 +265,10 @@ function scoreOf(record: SearchRecord, q: string): number {
     word: 4,
     pair: 2,
   };
-  return best + kindWeight[record.kind];
+  // 語・ミニマルペアのレコードは所属エントリへの入口にすぎないので、
+  // 同じ語に一致した本体エントリより上に来ないよう一律に割り引く。
+  const scale = record.kind === 'word' || record.kind === 'pair' ? 0.6 : 1;
+  return best * scale + kindWeight[record.kind];
 }
 
 export function search(query: string, limit = 40): SearchHit[] {

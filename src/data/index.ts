@@ -17,12 +17,23 @@ import { mouth } from './phonemes/mouth';
 import { goat } from './phonemes/goat';
 import { nurse } from './phonemes/nurse';
 import { letter } from './phonemes/letter';
+import { start } from './phonemes/start';
+import { north } from './phonemes/north';
+import { near } from './phonemes/near';
+import { square } from './phonemes/square';
+import { cure } from './phonemes/cure';
 import { p as pCons } from './phonemes/p';
 import { b } from './phonemes/b';
 import { t } from './phonemes/t';
 import { d } from './phonemes/d';
 import { k } from './phonemes/k';
 import { g } from './phonemes/g';
+import { f } from './phonemes/f';
+import { v } from './phonemes/v';
+import { th } from './phonemes/th';
+import { dh } from './phonemes/dh';
+import { s as sCons } from './phonemes/s';
+import { sh } from './phonemes/sh';
 import { allTopics } from './topics';
 import { allRules } from './rules';
 
@@ -52,6 +63,11 @@ export const phonemes: Phoneme[] = [
   // R性母音
   nurse,
   letter,
+  start,
+  north,
+  near,
+  square,
+  cure,
   // 破裂音（調音点順: 両唇 → 歯茎 → 軟口蓋）
   pCons,
   b,
@@ -59,6 +75,13 @@ export const phonemes: Phoneme[] = [
   d,
   k,
   g,
+  // 摩擦音（調音点順: 唇歯 → 歯 → 歯茎 → 後部歯茎）
+  f,
+  v,
+  th,
+  dh,
+  sCons,
+  sh,
 ];
 
 export const rules: Rule[] = allRules;

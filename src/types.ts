@@ -223,8 +223,12 @@ export interface SearchRecord {
   title: string;
   /** タイトル下の補助表示 */
   subtitle: string;
-  /** 一致判定に使う語の集合（IPA・英語名・日本語名・例語・別名） */
+  /** 一致判定に使う主キー（IPA・英語名・日本語名・自分の例語・綴りパターン） */
   keys: string[];
+  /** 副次キー。対比相手の語など、そのエントリの主題ではないが引っかかるべき語。 */
+  secondaryKeys?: string[];
+  /** 本文。解説文・台本・FAQ などを連結したもの。最低スコアで全文検索に使う。 */
+  text?: string;
   /** 検索結果に出す短い説明 */
   snippet?: string;
 }
