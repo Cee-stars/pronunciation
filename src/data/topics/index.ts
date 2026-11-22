@@ -7,6 +7,13 @@ import { mannerOfArticulation } from './manner-of-articulation';
 import { voicing } from './voicing';
 import { vowelAxes } from './vowel-axes';
 import { phonotactics } from './phonotactics';
+import { vowelDigraphs } from './vowel-digraphs';
+import { consonantDigraphs } from './consonant-digraphs';
+import { edEndings } from './ed-endings';
+import { sEndings } from './s-endings';
+import { magicE } from './magic-e';
+import { silentLetters } from './silent-letters';
+import { ough } from './ough';
 import { usVsUk } from './us-vs-uk';
 import { mergers } from './mergers';
 import { jpKatakanaGaps } from './jp-katakana-gaps';
@@ -21,6 +28,14 @@ export const allTopics: Topic[] = [
   voicing,
   vowelAxes,
   phonotactics,
+  // Day 29: スペリング逆引き
+  vowelDigraphs,
+  consonantDigraphs,
+  edEndings,
+  sEndings,
+  magicE,
+  silentLetters,
+  ough,
   // Day 30: 方言・変種
   usVsUk,
   mergers,

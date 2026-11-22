@@ -80,6 +80,16 @@ export function buildIndex(): SearchRecord[] {
     const words = ph.examples.map((e) => e.word);
     const spellingWords = ph.spellings.flatMap((s) => s.examples);
     const pairWords = ph.contrasts.flatMap((c) => c.pairs.flatMap((p) => [p.a, p.b]));
+    // 語の中で音素が現れる位置が早いほど加点する。
+    // think /θɪŋk/ は /θ/ と /ŋ/ の両方を含むが、頭にある /θ/ の項目を先に出す。
+    const keyBonus: Record<string, number> = {};
+    for (const e of ph.examples) {
+      const at = e.ipa.indexOf(ph.ipa);
+      const bonus = at < 0 ? 0 : Math.max(0, 6 - at);
+      const k = normalize(e.word);
+      keyBonus[k] = Math.max(keyBonus[k] ?? 0, bonus);
+    }
+
     const prose = [
       ph.oneLiner,
       ph.articulation.tongue,
@@ -119,6 +129,7 @@ export function buildIndex(): SearchRecord[] {
       // 代表例語として持つエントリが、例示や対比で触れるだけのエントリより上に来る。
       secondaryKeys: [...spellingWords, ...pairWords],
       text: prose,
+      keyBonus,
     });
 
     // 例語を単独のレコードとしても登録する。"water" で引いたときに語として出す。
@@ -268,7 +279,7 @@ function scoreOf(record: SearchRecord, q: string): number {
   // 語・ミニマルペアのレコードは所属エントリへの入口にすぎないので、
   // 同じ語に一致した本体エントリより上に来ないよう一律に割り引く。
   const scale = record.kind === 'word' || record.kind === 'pair' ? 0.6 : 1;
-  return best * scale + kindWeight[record.kind];
+  return best * scale + kindWeight[record.kind] + (record.keyBonus?.[q] ?? 0);
 }
 
 export function search(query: string, limit = 40): SearchHit[] {

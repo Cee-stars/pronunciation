@@ -229,6 +229,11 @@ export interface SearchRecord {
   secondaryKeys?: string[];
   /** 本文。解説文・台本・FAQ などを連結したもの。最低スコアで全文検索に使う。 */
   text?: string;
+  /**
+   * 語ごとの加点。正規化した語をキーに持つ。
+   * think のように複数の音素を含む語では、語の中で先に現れる音素の項目を上に出すために使う。
+   */
+  keyBonus?: Record<string, number>;
   /** 検索結果に出す短い説明 */
   snippet?: string;
 }

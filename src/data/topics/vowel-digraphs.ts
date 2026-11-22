@@ -205,7 +205,7 @@ export const vowelDigraphs: Topic = {
           ['/u/', 'food, moon, soon, school, room, pool, tooth, choose', '最頻', 'まずこれを試す'],
           ['/ʊ/', 'book, look, good, foot, cook, wood, wool, stood, took', '頻出', '-ook はほぼ全部 /ʊ/'],
           ['/ʌ/', 'blood, flood', '例外（2語）', 'この2語だけ'],
-          ['oor', '/ɔr/', 'door, floor, poor（一部の話者）', '少数', 'r の前'],
+          ['/ɔr/（oor）', 'door, floor, poor', '少数', 'r の前'],
         ],
       },
       body: [
