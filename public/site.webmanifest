@@ -1,0 +1,16 @@
+{
+  "name": "発音辞典 — English Pronunciation Reference",
+  "short_name": "発音辞典",
+  "description": "日本語話者のための英語発音辞典。全46音素・30日のカリキュラム・全文検索。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbfaf7",
+  "theme_color": "#1b1a17",
+  "lang": "ja",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
