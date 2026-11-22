@@ -60,7 +60,12 @@ export interface SpeakOptions {
 function utter(text: string, opts: SpeakOptions = {}): SpeechSynthesisUtterance {
   const u = new SpeechSynthesisUtterance(text);
   const voice = pickVoice();
-  if (voice) u.voice = voice;
+  // voice の代入は環境によっては失敗しうる。失敗しても既定の声で読ませればよい。
+  try {
+    if (voice) u.voice = voice;
+  } catch {
+    // 既定の声にまかせる
+  }
   u.lang = voice?.lang ?? 'en-US';
   u.rate = opts.rate ?? 0.85;
   u.pitch = opts.pitch ?? 1;
@@ -72,10 +77,15 @@ export function speak(text: string, opts: SpeakOptions = {}): Promise<void> {
   if (!speechSupported()) return Promise.resolve();
   stopSpeaking();
   return new Promise((resolve) => {
-    const u = utter(text, opts);
-    u.onend = () => resolve();
-    u.onerror = () => resolve();
-    window.speechSynthesis.speak(u);
+    try {
+      const u = utter(text, opts);
+      u.onend = () => resolve();
+      u.onerror = () => resolve();
+      window.speechSynthesis.speak(u);
+    } catch {
+      // 再生できなくても呼び出し側は進めてよい
+      resolve();
+    }
   });
 }
 
@@ -92,13 +102,50 @@ export async function speakSequence(
   stopSpeaking();
   for (let i = 0; i < texts.length; i++) {
     await new Promise<void>((resolve) => {
-      const u = utter(texts[i], opts);
-      u.onend = () => resolve();
-      u.onerror = () => resolve();
-      window.speechSynthesis.speak(u);
+      try {
+        const u = utter(texts[i], opts);
+        u.onend = () => resolve();
+        u.onerror = () => resolve();
+        window.speechSynthesis.speak(u);
+      } catch {
+        resolve();
+      }
     });
     if (i < texts.length - 1) {
       await new Promise((r) => setTimeout(r, gap));
     }
   }
+}
+
+/**
+ * 利用可能な声が出揃うまで待つ。
+ *
+ * getVoices() は初回に空配列を返し、少し遅れて voiceschanged が飛ぶ実装が多い。
+ * また Linux のように音声エンジンが入っていない環境では、API は存在するのに
+ * 声が0個のままになる。その場合ボタンを押しても無音のまま何も起きないので、
+ * 呼び出し側が状態を表示できるよう、待った結果をそのまま返す。
+ */
+export function waitForVoices(timeoutMs = 2000): Promise<SpeechSynthesisVoice[]> {
+  if (!speechSupported()) return Promise.resolve([]);
+  const immediate = window.speechSynthesis.getVoices();
+  if (immediate.length > 0) return Promise.resolve(immediate);
+  return new Promise((resolve) => {
+    let settled = false;
+    const done = () => {
+      if (settled) return;
+      settled = true;
+      resolve(window.speechSynthesis.getVoices());
+    };
+    window.speechSynthesis.addEventListener('voiceschanged', done, { once: true });
+    setTimeout(done, timeoutMs);
+  });
+}
+
+export type VoiceStatus = 'unsupported' | 'none' | 'ok';
+
+/** 音声再生が実際に機能するかを判定する。'none' は API はあるが声が無い状態。 */
+export async function checkVoices(): Promise<VoiceStatus> {
+  if (!speechSupported()) return 'unsupported';
+  const voices = await waitForVoices();
+  return voices.length === 0 ? 'none' : 'ok';
 }

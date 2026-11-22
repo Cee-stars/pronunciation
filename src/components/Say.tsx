@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { speak, speakSequence, speechSupported, warmUpVoices } from '../speech';
+import { checkVoices, speak, speakSequence, speechSupported, warmUpVoices } from '../speech';
+import { useAsync } from '../useAsync';
 
 /** 1語・1文を読み上げるボタン。全ジャンルの例に付ける。 */
 export function Say({
@@ -24,8 +25,11 @@ export function Say({
       aria-label={`「${text}」を再生`}
       onClick={async () => {
         setBusy(true);
-        await speak(text, { rate: slow ? 0.6 : 0.85 });
-        setBusy(false);
+        try {
+          await speak(text, { rate: slow ? 0.6 : 0.85 });
+        } finally {
+          setBusy(false);
+        }
       }}
     >
       {label ?? '▶'}
@@ -48,8 +52,11 @@ export function SayPair({ a, b, slow = false }: { a: string; b: string; slow?: b
       aria-label={`${a} と ${b} を連続再生`}
       onClick={async () => {
         setBusy(true);
-        await speakSequence([a, b], { rate: slow ? 0.6 : 0.85, gapMs: slow ? 700 : 450 });
-        setBusy(false);
+        try {
+          await speakSequence([a, b], { rate: slow ? 0.6 : 0.85, gapMs: slow ? 700 : 450 });
+        } finally {
+          setBusy(false);
+        }
       }}
     >
       A→B
@@ -78,8 +85,11 @@ export function SayAll({
       className={`say say-all${busy ? ' say-busy' : ''}`}
       onClick={async () => {
         setBusy(true);
-        await speakSequence(texts, { rate: slow ? 0.6 : 0.85, gapMs: slow ? 700 : 400 });
-        setBusy(false);
+        try {
+          await speakSequence(texts, { rate: slow ? 0.6 : 0.85, gapMs: slow ? 700 : 400 });
+        } finally {
+          setBusy(false);
+        }
       }}
     >
       {busy ? '再生中…' : label}
@@ -87,13 +97,30 @@ export function SayAll({
   );
 }
 
-/** 音声が使えない環境向けの注意書き。 */
+/**
+ * 音声が使えない環境向けの注意書き。
+ *
+ * API の有無だけでは足りない。音声エンジンを持たない環境（多くの Linux、一部の
+ * コンテナ環境）では speechSynthesis は存在するのに声が0個で、ボタンを押しても
+ * 無音のまま何も起きない。利用者が不具合と区別できるよう、その状態を明示する。
+ */
 export function SpeechNotice() {
-  if (speechSupported()) return null;
+  const status = useAsync(() => checkVoices(), []);
+  if (status.status === 'loading') return null;
+  if (status.value === 'ok') return null;
+  if (status.value === 'unsupported') {
+    return (
+      <p className="notice">
+        この環境では音声合成に対応していないため、再生ボタンは動作しません。Chrome / Safari /
+        Edge では利用できます。
+      </p>
+    );
+  }
   return (
     <p className="notice">
-      この環境では音声合成が使えないため、再生ボタンは表示されません。Chrome / Safari / Edge
-      では利用できます。
+      音声合成の API はありますが、この環境には音声データが入っていないため、再生しても音が出ません。
+      再生ボタンは表示されますが無音です。macOS・Windows・iOS・Android の標準ブラウザでは音が出ます。
+      Linux の場合は音声エンジン（speech-dispatcher と espeak-ng など）を入れると有効になります。
     </p>
   );
 }
