@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [claude/sweet-thompson-pqk02h]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
