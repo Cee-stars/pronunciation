@@ -1,0 +1,25 @@
+{
+  "name": "pronunciation-dictionary",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run gen:meta && vite",
+    "build": "npm run gen:meta && tsc --noEmit && node scripts/check-links.cjs && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "check-links": "node scripts/check-links.cjs",
+    "gen:meta": "node scripts/gen-meta.cjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}
