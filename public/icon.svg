@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="発音辞典">
+  <rect width="512" height="512" rx="112" fill="#1b1a17"/>
+  <!-- IPA の æ。日本語に対応する音がない、このアプリを象徴する記号 -->
+  <text x="256" y="258"
+        font-family="Charis SIL, Doulos SIL, Gentium Plus, Lucida Sans Unicode, DejaVu Sans, serif"
+        font-size="300" fill="#d8a06a" text-anchor="middle" dominant-baseline="central">æ</text>
+  <!-- 音素表記のスラッシュ -->
+  <text x="72" y="258" font-family="DejaVu Sans, sans-serif" font-size="300" fill="#55514a" text-anchor="middle" dominant-baseline="central">/</text>
+  <text x="440" y="258" font-family="DejaVu Sans, sans-serif" font-size="300" fill="#55514a" text-anchor="middle" dominant-baseline="central">/</text>
+</svg>
