@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { curriculum, totalDays } from '../data/curriculum';
-import { phonemes, phonemesByGroup, rules, topics } from '../data';
+import { phonemeMeta, phonemeMetaByGroup, ruleMeta, topicMeta } from '../data/lazy';
 import { readDays } from '../progress';
 
 export function Home() {
@@ -10,7 +10,7 @@ export function Home() {
   }, []);
 
   const next = curriculum.find((d) => !done.has(d.day)) ?? curriculum[curriculum.length - 1];
-  const written = phonemes.length + rules.length + topics.length;
+  const written = phonemeMeta.length + ruleMeta.length + topicMeta.length;
 
   return (
     <div className="home">
@@ -29,7 +29,8 @@ export function Home() {
           </a>
         </div>
         <p className="small muted">
-          進捗 {done.size} / {totalDays} 日 · 収録エントリ {written} 件（執筆中）
+          進捗 {done.size} / {totalDays} 日 · 収録エントリ {written} 件（音素 {phonemeMeta.length}・
+          音声変化 {ruleMeta.length}・解説 {topicMeta.length}）
         </p>
       </section>
 
@@ -52,7 +53,7 @@ export function Home() {
 
       <section className="sec">
         <h3>音素</h3>
-        {phonemesByGroup().map(({ group, items }) => (
+        {phonemeMetaByGroup().map(({ group, items }) => (
           <div key={group} className="ipagroup">
             <h4>{group}</h4>
             <div className="chips">
@@ -73,8 +74,10 @@ export function PhonemeTable() {
   return (
     <div className="home">
       <h1>音素一覧</h1>
-      <p className="lead">記号をクリックすると項目に移動する。検索欄からは IPA・別名・例語でも引ける。</p>
-      {phonemesByGroup().map(({ group, items }) => (
+      <p className="lead">
+        記号をクリックすると項目に移動する。検索欄からは IPA・別名・例語でも引ける。
+      </p>
+      {phonemeMetaByGroup().map(({ group, items }) => (
         <div key={group} className="ipagroup">
           <h4>{group}</h4>
           <table className="spell">

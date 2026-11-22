@@ -1,5 +1,5 @@
-import type { SearchRecord } from './types';
-import { phonemes, rules, topics } from './data';
+import type { Phoneme, Rule, SearchRecord, Topic } from './types';
+import { loadAll } from './data/lazy';
 
 /**
  * 統合検索。
@@ -71,9 +71,16 @@ function normalize(s: string): string {
 
 let cache: SearchRecord[] | null = null;
 
-/** 全データを検索レコードに平坦化する。初回のみ構築してキャッシュする。 */
-export function buildIndex(): SearchRecord[] {
+/**
+ * 全データを検索レコードに平坦化する。
+ *
+ * 検索は解説文まで対象にするため全エントリを要する。エントリ本体は Day ごとの
+ * チャンクに分かれているので、初回検索時に loadAll() でまとめて取りに行き、
+ * 組んだ索引はキャッシュする。2回目以降は同期的に引ける。
+ */
+export function buildIndex(data: { phonemes: Phoneme[]; rules: Rule[]; topics: Topic[] }): SearchRecord[] {
   if (cache) return cache;
+  const { phonemes, rules, topics } = data;
   const out: SearchRecord[] = [];
 
   for (const ph of phonemes) {
@@ -282,11 +289,17 @@ function scoreOf(record: SearchRecord, q: string): number {
   return best * scale + kindWeight[record.kind] + (record.keyBonus?.[q] ?? 0);
 }
 
+/** 索引の準備。初回だけ全エントリを読み込む。 */
+export async function prepareSearch(): Promise<void> {
+  if (cache) return;
+  buildIndex(await loadAll());
+}
+
 export function search(query: string, limit = 40): SearchHit[] {
   const q = normalize(query);
-  if (!q) return [];
+  if (!q || !cache) return [];
   const hits: SearchHit[] = [];
-  for (const record of buildIndex()) {
+  for (const record of cache) {
     const score = scoreOf(record, q);
     if (score > 0) hits.push({ ...record, score });
   }

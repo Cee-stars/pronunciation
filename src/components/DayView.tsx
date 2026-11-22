@@ -1,39 +1,47 @@
 import { useEffect, useState } from 'react';
 import type { DayEntryRef, DayPlan } from '../data/curriculum';
 import { curriculum, totalDays } from '../data/curriculum';
-import { phonemeById, ruleById, topicById } from '../data';
+import { findMeta, loadEntry } from '../data/lazy';
+import type { Phoneme, Rule, Topic } from '../types';
+import { useAsync } from '../useAsync';
 import { PhonemeView } from './PhonemeView';
 import { RuleView, TopicView } from './RuleView';
 import { readDays, setDayRead } from '../progress';
 
+/** その日のエントリを1つ描画する。本体はここで初めて読み込まれる。 */
 function EntryBody({ entry: r }: { entry: DayEntryRef }) {
-  if (r.kind === 'phoneme') {
-    const ph = phonemeById.get(r.id);
-    if (ph) return <PhonemeView ph={ph} />;
+  const state = useAsync(() => loadEntry(r.kind, r.id), [r.kind, r.id]);
+
+  if (state.status === 'loading') {
+    return (
+      <div className="pending" aria-busy="true">
+        読み込み中…
+      </div>
+    );
   }
-  if (r.kind === 'rule') {
-    const rule = ruleById.get(r.id);
-    if (rule) return <RuleView rule={rule} />;
+  const value = state.value;
+  if (!value) {
+    return (
+      <div className="pending">
+        <code>
+          {r.kind}:{r.id}
+        </code>{' '}
+        — 準備中
+      </div>
+    );
   }
-  if (r.kind === 'topic') {
-    const tp = topicById.get(r.id);
-    if (tp) return <TopicView topic={tp} />;
-  }
-  return (
-    <div className="pending">
-      <code>
-        {r.kind}:{r.id}
-      </code>{' '}
-      — 準備中
-    </div>
-  );
+  if (r.kind === 'phoneme') return <PhonemeView ph={value as Phoneme} />;
+  if (r.kind === 'rule') return <RuleView rule={value as Rule} />;
+  return <TopicView topic={value as Topic} />;
 }
 
 function ReviewLink({ entry: r }: { entry: DayEntryRef }) {
-  const ph = r.kind === 'phoneme' ? phonemeById.get(r.id) : undefined;
-  const rule = r.kind === 'rule' ? ruleById.get(r.id) : undefined;
-  const tp = r.kind === 'topic' ? topicById.get(r.id) : undefined;
-  const label = ph ? `/${ph.ipa}/ ${ph.nickname}` : rule ? rule.title : tp ? tp.title : r.id;
+  const meta = findMeta(r.id);
+  const label = meta
+    ? meta.kind === 'phoneme'
+      ? `/${meta.ipa}/ ${meta.nickname}`
+      : meta.title
+    : r.id;
   return (
     <a className="chip" href={`#/${r.kind}/${r.id}`}>
       {label}

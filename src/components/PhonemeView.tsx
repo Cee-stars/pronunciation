@@ -1,5 +1,5 @@
 import type { Phoneme } from '../types';
-import { phonemeById, ruleById, topicById } from '../data';
+import { findMeta } from '../data/lazy';
 import { Say, SayAll, SayPair } from './Say';
 
 /**
@@ -8,33 +8,18 @@ import { Say, SayAll, SayPair } from './Say';
  * 遷移先で「準備中」と表示させる。
  */
 function RelatedChip({ id }: { id: string }) {
-  const ph = phonemeById.get(id);
-  if (ph) {
+  const meta = findMeta(id);
+  if (!meta) {
     return (
-      <a className="chip" href={`#/phoneme/${id}`}>
-        /{ph.ipa}/ {ph.nickname}
+      <a className="chip chip-pending" href={`#/rule/${id}`}>
+        {id}（準備中）
       </a>
     );
   }
-  const rule = ruleById.get(id);
-  if (rule) {
-    return (
-      <a className="chip" href={`#/rule/${id}`}>
-        {rule.title}
-      </a>
-    );
-  }
-  const topic = topicById.get(id);
-  if (topic) {
-    return (
-      <a className="chip" href={`#/topic/${id}`}>
-        {topic.title}
-      </a>
-    );
-  }
+  const label = meta.kind === 'phoneme' ? `/${meta.ipa}/ ${meta.nickname}` : meta.title;
   return (
-    <a className="chip chip-pending" href={`#/rule/${id}`}>
-      {id}（準備中）
+    <a className="chip" href={`#/${meta.kind}/${id}`}>
+      {label}
     </a>
   );
 }

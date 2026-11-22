@@ -4,11 +4,12 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && node scripts/check-links.cjs && vite build",
+    "dev": "npm run gen:meta && vite",
+    "build": "npm run gen:meta && tsc --noEmit && node scripts/check-links.cjs && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "check-links": "node scripts/check-links.cjs"
+    "check-links": "node scripts/check-links.cjs",
+    "gen:meta": "node scripts/gen-meta.cjs"
   },
   "dependencies": {
     "react": "^18.3.1",

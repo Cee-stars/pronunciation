@@ -237,3 +237,26 @@ export interface SearchRecord {
   /** 検索結果に出す短い説明 */
   snippet?: string;
 }
+
+/* ───────────────────────── 一覧用メタデータ ───────────────────────── */
+
+/**
+ * エントリ本体を読み込まずに一覧へ出すための最小情報。
+ * scripts/gen-meta.cjs が全エントリから抽出し、src/data/meta.generated.ts に書き出す。
+ * 本体（調音・台本・FAQ・ミニマルペア）は Day ごとに遅延読み込みする。
+ */
+export interface EntryMeta {
+  kind: 'phoneme' | 'rule' | 'topic';
+  id: string;
+  oneLiner: string;
+  /** 音素のみ */
+  ipa?: string;
+  type?: PhonemeType;
+  group?: string;
+  keyword?: string;
+  nickname?: string;
+  /** ルール・解説のみ */
+  title?: string;
+  titleEn?: string;
+  genre?: string;
+}

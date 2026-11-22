@@ -5,7 +5,9 @@ import { SearchView } from './components/SearchView';
 import { PhonemeView } from './components/PhonemeView';
 import { RuleView, TopicView } from './components/RuleView';
 import { SpeechNotice } from './components/Say';
-import { phonemeById, ruleById, topicById } from './data';
+import { loadEntry } from './data/lazy';
+import type { Phoneme, Rule, Topic } from './types';
+import { useAsync } from './useAsync';
 
 type Route =
   | { name: 'home' }
@@ -39,6 +41,23 @@ function parseHash(): Route {
     default:
       return { name: 'home' };
   }
+}
+
+/** 単独のエントリページ。本体はここで初めて読み込まれる。 */
+function EntryRoute({ kind, id }: { kind: 'phoneme' | 'rule' | 'topic'; id: string }) {
+  const state = useAsync(() => loadEntry(kind, id), [kind, id]);
+  if (state.status === 'loading') {
+    return (
+      <p className="notice" aria-busy="true">
+        読み込み中…
+      </p>
+    );
+  }
+  const value = state.value;
+  if (!value) return <Missing kind={kind} id={id} />;
+  if (kind === 'phoneme') return <PhonemeView ph={value as Phoneme} />;
+  if (kind === 'rule') return <RuleView rule={value as Rule} />;
+  return <TopicView topic={value as Topic} />;
 }
 
 function Missing({ kind, id }: { kind: string; id: string }) {
@@ -92,21 +111,15 @@ export function App() {
     case 'day':
       body = <DayView day={route.day} />;
       break;
-    case 'phoneme': {
-      const ph = phonemeById.get(route.id);
-      body = ph ? <PhonemeView ph={ph} /> : <Missing kind="phoneme" id={route.id} />;
+    case 'phoneme':
+      body = <EntryRoute kind="phoneme" id={route.id} />;
       break;
-    }
-    case 'rule': {
-      const rule = ruleById.get(route.id);
-      body = rule ? <RuleView rule={rule} /> : <Missing kind="rule" id={route.id} />;
+    case 'rule':
+      body = <EntryRoute kind="rule" id={route.id} />;
       break;
-    }
-    case 'topic': {
-      const tp = topicById.get(route.id);
-      body = tp ? <TopicView topic={tp} /> : <Missing kind="topic" id={route.id} />;
+    case 'topic':
+      body = <EntryRoute kind="topic" id={route.id} />;
       break;
-    }
     case 'search':
       body = <SearchView query={route.query} />;
       break;

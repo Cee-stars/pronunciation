@@ -1,4 +1,5 @@
-import { search } from '../search';
+import { prepareSearch, search } from '../search';
+import { useAsync } from '../useAsync';
 
 const kindLabel: Record<string, string> = {
   phoneme: '音素',
@@ -9,6 +10,18 @@ const kindLabel: Record<string, string> = {
 };
 
 export function SearchView({ query }: { query: string }) {
+  // 検索は全文を対象にするので、初回だけ全エントリの読み込みを待つ。
+  const ready = useAsync(() => prepareSearch(), []);
+  if (ready.status === 'loading') {
+    return (
+      <div className="home">
+        <h1>「{query}」の検索結果</h1>
+        <p className="notice" aria-busy="true">
+          索引を準備しています…（初回のみ）
+        </p>
+      </div>
+    );
+  }
   const hits = search(query);
 
   return (
